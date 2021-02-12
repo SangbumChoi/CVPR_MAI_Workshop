@@ -8,6 +8,7 @@ import csv
 from normalizer import Normalizer
 
 from mobilenetv2 import MobileNetV2
+from mobilenetv3 import MobileNetV3
 
 import tensorflow as tf
 
@@ -91,7 +92,7 @@ def train(args):
     train_generator, validation_generator, num_training, num_validation, num_classes = generate(args)
     print("{} classes found".format(num_classes))
 
-    model = MobileNetV2((args.input_size, args.input_size, 3), num_classes, args.plot_model)
+    model = MobileNetV3(input_shape = (args.input_size, args.input_size, 3), classes_number =  num_classes, plot_model = args.plot_model)
 
     opt = tf.keras.optimizers.Adam()
     earlystop = tf.keras.callbacks.EarlyStopping(monitor='val_acc', patience=30, verbose=1, mode='auto')
@@ -189,11 +190,11 @@ if __name__ == '__main__':
         help="Whether or not to flip vertically for data augmentation.")
     parser.add_argument(
             "--mean",
-            default=None,
+            default='107.9550320,103.9969850,95.78056276',
             help="Dataset mean values for r, g, b values separates by commas")
     parser.add_argument(
             "--std",
-            default=None,
+            default='76.235767,73.0072566,78.41874540',
             help="Dataset std values for r, g, b values separates by commas")
         
     args = parser.parse_args()

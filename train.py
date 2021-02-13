@@ -131,13 +131,11 @@ if __name__ == '__main__':
             help="Path to directory containing validation images")
     # Optional arguments.
     parser.add_argument(
-        "-w",
         "--input_width",
         type=int,
         default=576,
         help="Input image size.")
     parser.add_argument(
-        "-h",
         "--input_heigth",
         type=int,
         default=384,

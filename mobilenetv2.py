@@ -96,7 +96,7 @@ def _inverted_residual_block(inputs, filters, kernel, t, strides, n):
     return x
 
 
-def MobileNetV2(input_shape, k, plot_model=False):
+def MobileNetV2(input_shape, classes_number, plot_model=False):
     """MobileNetv2
     This function defines a MobileNetv2 architecture.
 
@@ -124,7 +124,7 @@ def MobileNetV2(input_shape, k, plot_model=False):
     x = tf.keras.layers.Flatten()(x)
     x = tf.keras.layers.Dense(64, activation='sigmoid')(x)
     x = tf.keras.layers.Dropout(0.5)(x)
-    output = tf.keras.layers.Dense(30, activation='softmax')(x)
+    output = tf.keras.layers.Dense(classes_number, activation='softmax')(x)
     model = tf.keras.models.Model(inputs, output)
     model.summary()
     if plot_model:

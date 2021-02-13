@@ -46,14 +46,14 @@ def generate(args):
 
     train_generator = train_aug.flow_from_directory(
         args.train_dir,
-        target_size=(args.input_size, args.input_size),
+        target_size=(args.input_height, args.input_width),
         batch_size=args.batch_size,
         class_mode='categorical',
         shuffle=True)
 
     mean, std = [], []
     if args.mean is None or args.std is None:
-        mean, std = normalizer.get_stats(args.train_dir, train_generator.filenames, (args.input_size, args.input_size))
+        mean, std = normalizer.get_stats(args.train_dir, train_generator.filenames, (args.input_height, args.input_width))
     else:
         mean = [float(m.strip()) for m in args.mean.split(',')]
         std = [float(s.strip()) for s in args.std.split(',')]
@@ -74,7 +74,7 @@ def generate(args):
 
     validation_generator = validation_aug.flow_from_directory(
         args.validation_dir,
-        target_size=(args.input_size, args.input_size),
+        target_size=(args.input_height, args.input_width),
         batch_size=args.batch_size,
         class_mode='categorical')
 
@@ -92,7 +92,7 @@ def train(args):
     train_generator, validation_generator, num_training, num_validation, num_classes = generate(args)
     print("{} classes found".format(num_classes))
 
-    model = MobileNetV3(input_shape = (args.input_size, args.input_size, 3), classes_number =  num_classes, plot_model = args.plot_model)
+    model = MobileNetV3(input_shape = (args.input_height, args.input_width, 3), classes_number =  num_classes, plot_model = args.plot_model)
 
     opt = tf.keras.optimizers.Adam()
     earlystop = tf.keras.callbacks.EarlyStopping(monitor='val_acc', patience=30, verbose=1, mode='auto')
@@ -131,10 +131,16 @@ if __name__ == '__main__':
             help="Path to directory containing validation images")
     # Optional arguments.
     parser.add_argument(
-        "-s",
-        "--input_size",
+        "-w",
+        "--input_width",
         type=int,
-        default=224,
+        default=576,
+        help="Input image size.")
+    parser.add_argument(
+        "-h",
+        "--input_heigth",
+        type=int,
+        default=384,
         help="Input image size.")
     parser.add_argument(
         "-b",

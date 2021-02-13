@@ -92,7 +92,7 @@ def train(args):
     train_generator, validation_generator, num_training, num_validation, num_classes = generate(args)
     print("{} classes found".format(num_classes))
 
-    model = MobileNetV3(input_shape = (args.input_height, args.input_width, 3), classes_number =  num_classes, plot_model = args.plot_model)
+    model = MobileNetV2(input_shape = (args.input_height, args.input_width, 3), classes_number =  num_classes, plot_model = args.plot_model)
 
     opt = tf.keras.optimizers.Adam()
     earlystop = tf.keras.callbacks.EarlyStopping(monitor='val_acc', patience=30, verbose=1, mode='auto')
@@ -136,7 +136,7 @@ if __name__ == '__main__':
         default=576,
         help="Input image size.")
     parser.add_argument(
-        "--input_heigth",
+        "--input_height",
         type=int,
         default=384,
         help="Input image size.")

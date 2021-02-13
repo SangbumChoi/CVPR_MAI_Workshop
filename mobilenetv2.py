@@ -121,12 +121,10 @@ def MobileNetV2(input_shape, k, plot_model=False):
     x = _inverted_residual_block(x, 320, (3, 3), t=6, strides=1, n=1)
 
     x = _conv_block(x, 1280, (1, 1), strides=(1, 1))
-    x = tf.keras.layers.GlobalAveragePooling2D()(x)
-    x = tf.keras.layers.Reshape((1, 1, 1280))(x)
-    x = tf.keras.layers.Dropout(0.3, name='Dropout')(x)
-    x = tf.keras.layers.Conv2D(k, (1, 1), padding='same')(x)
-    x = tf.keras.layers.Activation('softmax', name='final_activation')(x)
-    output = tf.keras.layers.Reshape((k,), name='output')(x)
+    x = tf.keras.layers.Flatten()(x)
+    x = tf.keras.layers.Dense(64, activation='sigmoid')(x)
+    x = tf.keras.layers.Dropout(0.5)(x)
+    output = tf.keras.layers.Dense(30, activation='softmax')(x)
     model = tf.keras.models.Model(inputs, output)
     model.summary()
     if plot_model:

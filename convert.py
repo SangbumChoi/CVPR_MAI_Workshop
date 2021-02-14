@@ -15,7 +15,6 @@ def representative_dataset():
 
         data = imageio.imread("sample_images/" + str(i) + ".jpg")
         data = np.reshape(data, [1, 384, 576, 3])
-        np.resize()
         yield [data.astype(np.float32)]
 
 

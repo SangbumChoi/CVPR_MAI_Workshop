@@ -12,13 +12,13 @@ import numpy as np
 import os
 
 from tensorflow.lite.python import interpreter as interpreter_wrapper
-
+from zipfile import ZipFile
 
 if __name__ == "__main__":
 
     # Specify the name of your TFLite model and the location of the sample test images
 
-    image_folder = "../data/MAI/images"
+    image_folder = "../data/images/"
     model_file = "model.tflite"
 
     # Load your TFLite model
@@ -42,6 +42,11 @@ if __name__ == "__main__":
     # Process test images and display the results
 
     image_list = os.listdir(image_folder)
+    # using sorted () + key with (len (x), x)
+    # numeric string sorting
+    image_list = sorted (image_list, key = lambda x: (len (x), x))
+
+    f = open("results.txt", 'w')
 
     for image_name in image_list:
 
@@ -64,3 +69,26 @@ if __name__ == "__main__":
 
         print("Image " + image_name + ", predicted classes: \t %d, %d, %d" %
               (prediction_top_3[0], prediction_top_3[1], prediction_top_3[2]))
+        data_result = "%d\n" % prediction_top_3[0]
+        f.write(data_result)
+    f.close()
+
+    t = open("readme.txt", 'w')
+
+    fps = 18.33
+    extra_data = 0
+    device = 'Samsung Galaxy S10 (Exynos)'
+    acceleration = 'NNAPI'
+    t.write("Runtime per image [ms] : %f\n" % fps)
+    t.write("Extra Data [1] / No Extra Data [0] : %d\n" % extra_data)
+    t.write("Acceleration : %s\n" % acceleration)
+    t.write("Other description : %d\n" % 1)
+
+    t.close()
+
+    zipObj = ZipFile('sample.zip', 'w')
+    # Add multiple files to the zip
+    zipObj.write('readme.txt')
+    zipObj.write('results.txt')
+    # close the Zip File
+    zipObj.close()
